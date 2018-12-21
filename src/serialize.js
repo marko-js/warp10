@@ -69,7 +69,14 @@ function pruneArray(array, path, serializationSymbol, assignments) {
             continue;
         }
 
-        if (value && (value === constants.NOOP || typeof value === 'object')) {
+        var type = typeof value;
+
+        if (type === "function" && value.toJSON) {
+            value = value.toJSON();
+            type = typeof value;
+        }
+
+        if (value && (value === constants.NOOP || type === 'object')) {
             let valuePath = path + '[' + i + ']';
             handleProperty(clone, i, value, valuePath, serializationSymbol, assignments);
         } else {
@@ -89,7 +96,14 @@ function pruneObject(obj, path, serializationSymbol, assignments) {
             continue;
         }
 
-        if (value && (value === constants.NOOP || typeof value === 'object' )) {
+        var type = typeof value;
+
+        if (type === "function" && value.toJSON) {
+            value = value.toJSON();
+            type = typeof value;
+        }
+
+        if (value && (value === constants.NOOP || type === 'object')) {
             let valuePath = path + (safePropName.test(key) ? '.' + key : '[' + JSON.stringify(key) + ']');
             handleProperty(clone, key, value, valuePath, serializationSymbol, assignments);
         } else {

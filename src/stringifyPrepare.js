@@ -63,7 +63,14 @@ function pruneArray(array, path, serializationSymbol, assignments) {
             continue;
         }
 
-        if (value && (value === constants.NOOP || typeof value === 'object')) {
+        var type = typeof value;
+
+        if (type === "function" && value.toJSON) {
+            value = value.toJSON();
+            type = typeof value;
+        }
+
+        if (value && (value === constants.NOOP || type === 'object')) {
             handleProperty(clone, i, value, append(path, i), serializationSymbol, assignments);
         } else {
             clone[i] = value;
@@ -96,7 +103,14 @@ function pruneObject(obj, path, serializationSymbol, assignments) {
             continue;
         }
 
-        if (value && (value === constants.NOOP || typeof value === 'object')) {
+        var type = typeof value;
+
+        if (type === "function" && value.toJSON) {
+            value = value.toJSON();
+            type = typeof value;
+        }
+
+        if (value && (value === constants.NOOP || type === 'object')) {
             handleProperty(clone, key, value, append(path, key), serializationSymbol, assignments);
         } else {
             clone[key] = value;
